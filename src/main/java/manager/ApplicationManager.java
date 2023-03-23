@@ -14,10 +14,12 @@ public class ApplicationManager {
     public void init() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
+
         wd = new ChromeDriver(options);
         wd.manage().window().maximize();
         wd.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         wd.navigate().to("https://ilcarro.web.app/search");
+
         helperUser = new HelperUser(wd);
     }
 
@@ -26,6 +28,6 @@ public class ApplicationManager {
     }
 
     public void stop() {
-        wd.quit();
+          wd.quit();
     }
 }

@@ -3,7 +3,10 @@ package manager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 
 public class HelperBase {
@@ -32,5 +35,22 @@ public class HelperBase {
         return list.size() > 0;
     }
 
+    public void pause(int time){
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void clear(By locator) {
+        WebElement element = wd.findElement(locator);
+        element.clear();
+    }
+
+    public void waitTime(int time, By locator){
+        WebDriverWait wait = new WebDriverWait(wd, Duration.ofSeconds(time));
+        wait.until(ExpectedConditions.visibilityOf(wd.findElement(locator)));
+    }
 
 }
