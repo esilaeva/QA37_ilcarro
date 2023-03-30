@@ -20,6 +20,8 @@ public class ApplicationManager {
         wd.manage().window().maximize();
         wd.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         wd.navigate().to("https://ilcarro.web.app/search");
+//        wd.navigate().back();
+//        wd.navigate().refresh();   // hard
 
         helperUser = new HelperUser(wd);
         helperCar = new HelperCar(wd);

@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class HelperUser extends HelperBase{
+public class HelperUser extends HelperBase {
     public HelperUser(WebDriver wd) {
         super(wd);
     }
@@ -21,8 +21,8 @@ public class HelperUser extends HelperBase{
     }
 
     public void fillLoginForm(String email, String password) {
-        type(By.id("email"),email);
-        type(By.id("password"),password);
+        type(By.id("email"), email);
+        type(By.id("password"), password);
     }
 
     public void fillLoginForm(User user) {
@@ -30,32 +30,34 @@ public class HelperUser extends HelperBase{
         type(By.id("password"), user.getPassword());
     }
 
-
-    public void submit() {
-        click(By.cssSelector("button[type='submit']"));
+    public String getMessageWrongEmail() {
+        return wd.findElement(By.xpath("//*[text()='Wrong email format']")).getText();
     }
 
-    public String getMessage(){
-//        WebElement element = wd.findElement(By.cssSelector(".dialog-container>h2"));
-//        String  text = element.getText();
-//        return text;
-
-        // wait
-
-        WebDriverWait wait = new WebDriverWait(wd, Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.visibilityOf(wd.findElement(By.cssSelector(".dialog-container"))));
-
-        // pause(8000);
-        return wd.findElement(By.cssSelector(".dialog-container>h2")).getText();
+    public String getMessageWrongPassword() {
+        return wd.findElement(By.xpath("//*[text()='Password must contain minimum 8 symbols']")).getText();
     }
+
+    public Boolean isMessageFail() {
+        return super.isElementPresent(By.xpath("//*[text()='Registration failed']"));
+    }
+
+    public boolean isMessageWrongEmail() {
+        return super.isElementPresent(By.xpath("//*[text()='Wrong email format']"));
+    }
+
+    public boolean isMessageWrongPassword() {
+        return super.isElementPresent(By.xpath("//*[text()='Wrong email format']"));
+    }
+
 
     public void closeWindow() {
-        if(isElementPresent(By.xpath("//button[text()='Ok']")))
+        if (isElementPresent(By.xpath("//button[text()='Ok']")))
             click(By.xpath("//button[text()='Ok']"));
 
     }
 
-    public boolean isLogged(){
+    public boolean isLogged() {
         return isElementPresent(By.xpath("//a[text()=' Logout ']"));
     }
 
@@ -64,14 +66,14 @@ public class HelperUser extends HelperBase{
     }
 
     public String getErrorText() {
-        String text =wd.findElement(By.cssSelector("div.error")).getText();
+        String text = wd.findElement(By.cssSelector("div.error")).getText();
         System.out.println(text);
 
         return text;
     }
 
     public boolean isYallaButtonNotActive() {
-        boolean res =  isElementPresent(By.cssSelector("button[disabled]"));
+        boolean res = isElementPresent(By.cssSelector("button[disabled]"));
         WebElement element = wd.findElement(By.cssSelector("button[type='submit']"));
         boolean result = element.isEnabled();
         return res && !result;
@@ -98,16 +100,22 @@ public class HelperUser extends HelperBase{
     }
 
     public void checkPolicyXY() {
-        WebElement label = wd.findElement(By.cssSelector("label[for='terms-of-use']"));
-//        int xOffSet = label.getRect().getWidth()/2;
-        Rectangle rect = label.getRect();
-        int w = rect.getWidth();
-        int xOffSet = -w / 2;
-        Actions actions = new Actions(wd);
-        actions.moveToElement(label, xOffSet, 0).click().release().perform();
+        if (!wd.findElement(By.id("terms-of-use")).isSelected()) {
+            WebElement label = wd.findElement(By.cssSelector("label[for='terms-of-use']"));
+
+            Rectangle rect = label.getRect();
+            int w = rect.getWidth();
+            int xOffSet = -w / 2;
+            Actions actions = new Actions(wd);
+            actions.moveToElement(label, xOffSet, 0).click().release().perform();
+        }
     }
 
 
-
-
+    public void login(User user) {
+        openLoginForm();
+        fillLoginForm(user);
+        submit();
+        closeWindow();
+    }
 }
