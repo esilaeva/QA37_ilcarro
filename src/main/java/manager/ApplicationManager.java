@@ -10,6 +10,7 @@ public class ApplicationManager {
 
     WebDriver wd;
     HelperUser helperUser;
+    HelperCar helperCar;
 
     public void init() {
         ChromeOptions options = new ChromeOptions();
@@ -21,10 +22,15 @@ public class ApplicationManager {
         wd.navigate().to("https://ilcarro.web.app/search");
 
         helperUser = new HelperUser(wd);
+        helperCar = new HelperCar(wd);
     }
 
     public HelperUser getHelperUser() {
         return helperUser;
+    }
+
+    public HelperCar getHelperCar(){
+        return helperCar;
     }
 
     public void stop() {

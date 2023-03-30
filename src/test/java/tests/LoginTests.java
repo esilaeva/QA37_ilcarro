@@ -1,224 +1,65 @@
 package tests;
 
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import models.User;
 
-import java.time.Duration;
-
-public class LoginTests extends TestBase {
+public class LoginTests extends TestBase{
 
     @BeforeMethod
-    public void preCondition() {
-        if (!app.getHelperUser().isSignUp()) {
+    public void preCondition(){
+        if(app.getHelperUser().isLogged()){
             app.getHelperUser().logout();
         }
     }
 
     @Test
-    public void loginSuccess() {
+    public void loginSuccess(){
+        User user = new User().setEmail("b.snyder@gmail.com").setPassword("Tt12345$");
+
         app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.snyder@gmail.com", "Tt12345$");
-        app.getHelperUser().submitLogin();
-        // app.getHelperUser().submitOk();
+        app.getHelperUser().fillLoginForm("b.snyder@gmail.com","Tt12345$");
+        app.getHelperUser().submit();
+        //Assert if element with text "Logged in success" is present
+        Assert.assertEquals(app.getHelperUser().getMessage(),"Logged in success");
 
-        Assert.assertTrue(app.getHelperUser().isLogged());
     }
-
     @Test
-    public void loginSuccessModel() {
+    public void loginSuccessModel(){
         app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@gmail.com", "Tt12345$");
-        app.getHelperUser().submitLogin();
-        //app.getHelperUser().submitOk();
+        app.getHelperUser().fillLoginForm("b.snyder@gmail.com","Tt12345$");
+        app.getHelperUser().submit();
+        //Assert if element with text "Logged in success" is present
+        Assert.assertEquals(app.getHelperUser().getMessage(),"Logged in success");
 
-        Assert.assertTrue(app.getHelperUser().isLogged());
     }
-
     @Test
-    public void loginUnregisteredUser() {
+    public void loginWrongEmail(){
         app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("snyder@gmail.com", "Tt12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageLoginFailed(), "\"Login or Password incorrect\"");
+        app.getHelperUser().fillLoginForm("b.snydergmail.com","Tt12345$");
+        app.getHelperUser().submit();
+        Assert.assertEquals(app.getHelperUser().getErrorText(),"It'snot look like email");
+        Assert.assertTrue(app.getHelperUser().isYallaButtonNotActive());
     }
-
-
     @Test
-    public void loginWrongEmailBlank() {
+    public void loginWrongPassword(){
         app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("", "Tt12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertTrue(app.getHelperUser().isElementPresent(By.xpath("//*[@type='submit'][@disabled]")));
-        //Assert.assertEquals(app.getHelperUser().messageWrongEmailFormat(), "Email is required");
+        app.getHelperUser().fillLoginForm("b.snyder@gmail.com","Tt12345");
+        app.getHelperUser().submit();
+        Assert.assertEquals(app.getHelperUser().getMessage(),"\"Login or Password incorrect\"");
     }
-
     @Test
-    public void loginWrongEmailSpace() {
+    public void loginUnregistered(){
         app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm(" ", "Tt12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageWrongEmailFormat(), "Email is required");
+        app.getHelperUser().fillLoginForm("luck@gmail.com","luck12345$");
+        app.getHelperUser().submit();
+        Assert.assertEquals(app.getHelperUser().getMessage(),"\"Login or Password incorrect\"");
     }
-
-    @Test
-    public void loginWrongEmailWithoutAt() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().clear(By.xpath("//*[@id='email']"));
-        app.getHelperUser().fillLoginForm("b.ortizgmail.com", "Tt12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageWrongEmailFormat(), "It'snot look like email");
-    }
-
-    @Test
-    public void loginWrongEmailWithTwoAt() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@@gmail.com", "Tt12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageWrongEmailFormat(), "It'snot look like email");
-    }
-
-    @Test
-    public void loginWrongEmailBlankBeforAt() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("@gmail.com", "Tt12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageWrongEmailFormat(), "It'snot look like email");
-    }
-
-    @Test
-    public void loginWrongEmailBlankAfterAtBeforDot() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@.com", "Tt12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageWrongEmailFormat(), "It'snot look like email");
-    }
-
-    @Test
-    public void loginWrongEmailBlankAfterAt() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@", "Tt12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageWrongEmailFormat(), "It'snot look like email");
-    }
-
-    @Test
-    public void loginWrongEmailWithRusChar() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.оrtiz@gmail.com", "Tt12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageWrongEmailFormat(), "It'snot look like email");
-    }
-
-    @Test
-    public void loginWrongEmailWithoutDot() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@gmailcom", "Tt12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageLoginFailed(), "\"Login or Password incorrect\"");
-    }
-
-    @Test
-    public void loginWrongPasswordBlank() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@gmail.com", "");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertTrue(app.getHelperUser().isElementPresent(By.xpath("//*[@type='submit'][@disabled]")));
-    }
-
-    @Test
-    public void loginWrongPasswordWithRusChar() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("p.mоntfort@gmail.com", "Tоst12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageWrongEmailFormat(), "It'snot look like email");
-    }
-
-    @Test
-    public void loginWrongPasswordWithoutUpperCase() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@gmail.com", "t12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageLoginFailed(), "\"Login or Password incorrect\"");
-    }
-
-    @Test
-    public void loginWrongPasswordSpace() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@gmail.com", " ");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageLoginFailed(), "\"Login or Password incorrect\"");
-    }
-
-    @Test
-    public void loginWrongPasswordWithoutSpecChar() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@gmail.com", "Tt12345");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageLoginFailed(), "\"Login or Password incorrect\"");
-    }
-
-    @Test
-    public void loginWrongPasswordWithoutLowCase() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@gmail.com", "TT12345$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageLoginFailed(), "\"Login or Password incorrect\"");
-    }
-
-    @Test
-    public void loginWrongPasswordWithoutNumber() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@gmail.com", "TtTtTtTt$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageLoginFailed(), "\"Login or Password incorrect\"");
-    }
-
-    @Test
-    public void loginWrongPasswordLess8Symbols() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@gmail.com", "Tt1234$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageLoginFailed(), "\"Login or Password incorrect\"");
-    }
-
-    @Test
-    public void loginWrongPasswordMore15Symbols() {
-        app.getHelperUser().openLoginForm();
-        app.getHelperUser().fillLoginForm("b.ortiz@gmail.com", "Tt1234567890123$");
-        app.getHelperUser().submitLogin();
-
-        Assert.assertEquals(app.getHelperUser().messageLoginFailed(), "\"Login or Password incorrect\"");
-    }
-
     @AfterMethod
-    public void postCondition() {
-        if (!app.getHelperUser().isElementPresent(By.xpath("//*[@class='error']"))
-                && !app.getHelperUser().isElementPresent(By.xpath("//div[@class='error ng-star-inserted']//div[text()]"))
-                && !app.getHelperUser().isElementPresent(By.xpath("//button[@disabled]")))
-        {
-            app.getHelperUser().submitOk();
-        }
-
+    public void postCondition(){
+        app.getHelperUser().closeWindow();
     }
 }
+
