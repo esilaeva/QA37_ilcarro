@@ -3,6 +3,8 @@ package manager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
@@ -11,6 +13,7 @@ public class ApplicationManager {
     WebDriver wd;
     HelperUser helperUser;
     HelperCar helperCar;
+    Logger logger = LoggerFactory.getLogger(ApplicationManager.class);
 
     public void init() {
         ChromeOptions options = new ChromeOptions();
@@ -22,7 +25,7 @@ public class ApplicationManager {
         wd.navigate().to("https://ilcarro.web.app/search");
 //        wd.navigate().back();
 //        wd.navigate().refresh();   // hard
-
+        logger.info("All tests run in Chrome Browser");
         helperUser = new HelperUser(wd);
         helperCar = new HelperCar(wd);
     }
@@ -31,11 +34,11 @@ public class ApplicationManager {
         return helperUser;
     }
 
-    public HelperCar getHelperCar(){
+    public HelperCar getHelperCar() {
         return helperCar;
     }
 
     public void stop() {
-          wd.quit();
+        wd.quit();
     }
 }

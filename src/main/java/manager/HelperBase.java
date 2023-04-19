@@ -6,12 +6,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.List;
 
 public class HelperBase {
     WebDriver wd;
+    Logger logger = LoggerFactory.getLogger(HelperBase.class);
 
     public HelperBase(WebDriver wd) {
         this.wd = wd;
@@ -37,7 +40,7 @@ public class HelperBase {
         return list.size() > 0;
     }
 
-    public void pause(int time){
+    public void pause(int time) {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {
@@ -51,7 +54,7 @@ public class HelperBase {
 
     }
 
-    public void waitTime(int time, By locator){
+    public void waitTime(int time, By locator) {
         WebDriverWait wait = new WebDriverWait(wd, Duration.ofSeconds(time));
         wait.until(ExpectedConditions.visibilityOf(wd.findElement(locator)));
     }
