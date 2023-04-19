@@ -17,7 +17,6 @@ public class HelperUser extends HelperBase {
         //click(By.cssSelector("a[href='/login?url=%2Fsearch']"));
         //click(By.cssSelector("a[href ^='/login']"));
         click(By.xpath("//a[text()=' Log in ']"));
-
     }
 
     public void fillLoginForm(String email, String password) {

@@ -5,6 +5,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
+import java.lang.reflect.Array;
+
 public class HelperCar extends HelperBase {
     public HelperCar(WebDriver wd) {
         super(wd);
@@ -55,16 +57,29 @@ public class HelperCar extends HelperBase {
     public void searchCurrentMonth(String city, String dateFrom, String dateTo) {
         typeCity(city);
         click(By.id("dates"));
-        String locatorFrom = "//div[text()=' " + +" ']";
+        String[] arFrom = dateFrom.split("/");
+        String[] arTo = dateTo.split("/");
+
+        String locatorFrom = "//div[text()=' " + arFrom[1] +" ']";
         click(By.xpath(locatorFrom));
+        String locatorTo = "//div[text()=' " + arTo[1] +" ']";
+        click(By.xpath(locatorTo));
 
 
-        click(By.xpath("//div[text()='25']"));
-        click(By.xpath("//div[text()='28']"));
+//        click(By.xpath("//div[text()='25']"));
+//        click(By.xpath("//div[text()='28']"));
     }
 
     private void typeCity(String city) {
         type(By.id("city"), city);
         click(By.cssSelector("div.pac-item"));
+    }
+
+    public boolean isListOfCarsAppeared() {
+        return isElementPresent(By.xpath("//div[@class = 'cars-container ng-star-inserted']"));
+    }
+
+    public void goHomePage() {
+        wd.navigate().to("https://ilcarro.web.app/search");
     }
 }

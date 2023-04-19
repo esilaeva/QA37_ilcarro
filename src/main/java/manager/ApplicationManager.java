@@ -3,6 +3,8 @@ package manager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.events.WebDriverListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +28,10 @@ public class ApplicationManager {
 //        wd.navigate().back();
 //        wd.navigate().refresh();   // hard
         logger.info("All tests run in Chrome Browser");
+
+        WebDriverListener listener = new ListenerWD();
+        wd = new EventFiringDecorator<>(listener).decorate(wd);
+
         helperUser = new HelperUser(wd);
         helperCar = new HelperCar(wd);
     }
