@@ -36,6 +36,13 @@ public class HelperBase {
         WebElement element = wd.findElement(locator);
         element.click();
     }
+    public void clickDate(By locator) {
+        WebElement element = wd.findElement(locator);
+        clearNew(element);
+        element.click();
+    }
+
+
 
     public boolean isElementPresent(By locator) {
         List<WebElement> list = wd.findElements(locator);
@@ -53,7 +60,12 @@ public class HelperBase {
     public void clearNew(WebElement element) {
         element.sendKeys(" ");
         element.sendKeys(Keys.BACK_SPACE);
+    }
 
+    public void clearDate(WebElement element) {
+        click(By.cssSelector(".search-container"));
+        element.sendKeys(" ");
+        element.sendKeys(Keys.BACK_SPACE);
     }
 
     public void waitTime(int time, By locator) {

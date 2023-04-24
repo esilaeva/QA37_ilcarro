@@ -34,7 +34,7 @@ public class ListenerWD implements WebDriverListener {
         try {
             Files.copy(tmp, new File(link));
         } catch (IOException ex) {
-            throw new RuntimeException();
+            throw new RuntimeException(ex);
         }
     }
 
