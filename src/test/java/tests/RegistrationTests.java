@@ -1,5 +1,6 @@
 package tests;
 
+import manager.DataProviderUser;
 import models.User;
 import org.openqa.selenium.By;
 import org.slf4j.Logger;
@@ -22,18 +23,18 @@ public class RegistrationTests extends TestBase {
         }
     }
 
-    @Test
-    public void registrationSuccess() {
+    @Test(dataProvider = "registerUserFile", dataProviderClass = DataProviderUser.class)
+    public void registrationSuccess(User user) {
 //        Random random = new Random();
 //        int i = random.nextInt(1000);
 
-        int z = (int) System.currentTimeMillis() / 1000;
-
-        User user = new User().setFirstName("Lizon")
-                .setLastName("Snow")
-                .setEmail("l.snow+" + z + "@gmail.com")
-                .setPassword("Ss12345$");
-        logger.info("Test start with test data --->" + user.toString());
+//        int z = (int) System.currentTimeMillis() / 1000;
+//
+//        User user = new User().setFirstName("Lizon")
+//                .setLastName("Snow")
+//                .setEmail("l.snow+" + z + "@gmail.com")
+//                .setPassword("Ss12345$");
+//        logger.info("Test start with test data --->" + user.toString());
         app.getHelperUser().openRegistrationForm();
         app.getHelperUser().fillRegistrationForm(user);
         app.getHelperUser().checkPolicyXY();

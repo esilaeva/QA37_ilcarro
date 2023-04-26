@@ -1,6 +1,7 @@
 package manager;
 
 import com.google.common.io.Files;
+import org.checkerframework.checker.units.qual.K;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -22,6 +23,19 @@ public class HelperBase {
         this.wd = wd;
     }
 
+    public void clearTextBox(By locator){
+        WebElement element = wd.findElement(locator);
+        String os = System.getProperty("os.name");
+        logger.info("OS ---> '" + os + "'");
+        System.out.println(os);
+        if(os.startsWith("Win")){
+            element.sendKeys(Keys.CONTROL, "a");
+        }else {
+            element.sendKeys(Keys.COMMAND, "a");
+        }
+        element.sendKeys(Keys.DELETE);
+    }
+
     public void type(By locator, String text) {
         WebElement element = wd.findElement(locator);
         element.click();
@@ -36,13 +50,6 @@ public class HelperBase {
         WebElement element = wd.findElement(locator);
         element.click();
     }
-    public void clickDate(By locator) {
-        WebElement element = wd.findElement(locator);
-        clearNew(element);
-        element.click();
-    }
-
-
 
     public boolean isElementPresent(By locator) {
         List<WebElement> list = wd.findElements(locator);
@@ -110,4 +117,9 @@ public class HelperBase {
             throw new RuntimeException();
         }
     }
+
+    public String getMessageWrongDate() {
+        return wd.findElement(By.xpath("//*[text()=\" You can't pick date before today \"]")).getText();
+    }
+
 }

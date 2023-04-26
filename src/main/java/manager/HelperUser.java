@@ -83,6 +83,7 @@ public class HelperUser extends HelperBase {
     }
 
     public void fillRegistrationForm(User user) {
+        pause(1000);
         type(By.id("name"), user.getFirstName());
         type(By.id("lastName"), user.getLastName());
         type(By.id("email"), user.getEmail());

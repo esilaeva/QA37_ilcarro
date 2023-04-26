@@ -2,7 +2,9 @@ package manager;
 
 import models.Car;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import java.lang.reflect.Array;
@@ -57,7 +59,10 @@ public class HelperCar extends HelperBase {
 
     public void searchCurrentMonth(String city, String dateFrom, String dateTo) {
         typeCity(city);
+        //clearDate(wd.findElement(By.id("dates")));
+        //clearTextBox(By.id("dates"));
         click(By.id("dates"));
+
         String[] arFrom = dateFrom.split("/");
         String[] arTo = dateTo.split("/");
 
@@ -82,8 +87,8 @@ public class HelperCar extends HelperBase {
 
     public void searchCurrentYear(String city, String dateFrom, String dateTo) {
         typeCity(city);
-
-        clearDate(wd.findElement(By.id("dates")));
+        //clearDate(wd.findElement(By.id("dates")));
+   //     clearTextBox(By.id("dates"));
         click(By.id("dates"));
 
         LocalDate now = LocalDate.now();
@@ -123,6 +128,8 @@ public class HelperCar extends HelperBase {
 
     public void searchAnyPeriod(String city, String dateFrom, String dateTo) {
         typeCity(city);
+        //clearDate(wd.findElement(By.id("dates")));
+      //  clearTextBox(By.id("dates"));
         click(By.id("dates"));
 
         LocalDate now = LocalDate.now();
@@ -137,30 +144,38 @@ public class HelperCar extends HelperBase {
         int diffYear = from.getYear() - year;
         if (diffYear > 0) {
             diffMonth = 12 - month + from.getMonthValue();
-            clickNextMonthBtn(diffMonth);
         } else {
             diffMonth = from.getMonthValue() - month;
-            if (diffMonth > 0) {
-                clickNextMonthBtn(diffMonth);
-            }
         }
+        clickNextMonthBtn(diffMonth);
         click(By.xpath("//div[text()=' " + from.getDayOfMonth() + " ']"));
 
         diffYear = to.getYear() - from.getYear();
-
         System.out.println("diffYear from: " + diffYear);
         if (diffYear > 0) {
-
-                diffMonth = 12 - from.getMonthValue() + to.getMonthValue();
-                clickNextMonthBtn(diffMonth);
-            } else {
-                diffMonth = to.getMonthValue() - from.getMonthValue();
-                if (diffMonth > 0) {
-                    clickNextMonthBtn(diffMonth);
-
-            }
-
-
-        }click(By.xpath("//div[text()=' " + to.getDayOfMonth() + " ']"));
+            diffMonth = 12 - from.getMonthValue() + to.getMonthValue();
+        } else {
+            diffMonth = to.getMonthValue() - from.getMonthValue();
+        }
+        clickNextMonthBtn(diffMonth);
+        click(By.xpath("//div[text()=' " + to.getDayOfMonth() + " ']"));
     }
+
+    public void searchNotValidPeriod(String city, String dateFrom, String dateTo) {
+        typeCity(city);
+        WebElement element = wd.findElement(By.id("dates"));
+        //click(By.id("dates"));
+       // clearTextBox(By.id("dates"));
+        element.sendKeys(dateFrom + " - " + dateTo);
+        click(By.xpath("//div[@class='search-card']"));
+
+
+
+
+       // click(By.xpath("//div[@class='error ng-star-inserted']"));
+       // element.sendKeys(Keys.BACK_SPACE);
+//  1/26/2023 - 4/30/2023
+    }
+
+
 }

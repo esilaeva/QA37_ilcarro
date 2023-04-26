@@ -31,6 +31,13 @@ public class LoginTests extends TestBase {
         Assert.assertEquals(app.getHelperUser().getMessage(), "Logged in success");
 
     }
+    @Test(dataProvider = "loginDataFile", dataProviderClass = DataProviderUser.class)
+    public void loginSuccessFile(User user) {
+        app.getHelperUser().openLoginForm();
+        app.getHelperUser().fillLoginForm(user);
+        app.getHelperUser().submit();
+        Assert.assertEquals(app.getHelperUser().getMessage(), "Logged in success");
+    }
 
     @Test(dataProvider = "loginModels", dataProviderClass = DataProviderUser.class)
     public void loginSuccessModel(User user) {
